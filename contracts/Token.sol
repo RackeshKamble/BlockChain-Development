@@ -19,12 +19,23 @@ contract Token{
     //Track Balance
     //mapping is datastructure holds key-value pair
     mapping(address => uint256) public balanceOf;
+    
+    //Approve
+    //Nested mapping spender and exchange address
+    mapping(address => mapping(address => uint256)) public allowance;
 
     event Transfer(
         address indexed from, 
         address indexed to, 
         uint256 value
         );
+
+    event Approve(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+
+    );
 
     //Send Tokens
 
@@ -41,8 +52,7 @@ contract Token{
         balanceOf[msg.sender]= totalSupply;
     }
 
-    function transfer(address _to , uint256 _value) 
-    public returns(bool success)
+    function transfer(address _to , uint256 _value) public returns(bool success)
     {
         //Require that spender has enough tokens to spend
         require(balanceOf[msg.sender] >= _value);
@@ -58,6 +68,19 @@ contract Token{
         //Emit Transfer Event
         emit Transfer(msg.sender , _to ,_value);
         return true;
+    }
+
+    function approve(address _spender , uint256 _value) public returns(bool success){
+        //Check invalid spender
+        require(_spender != address(0));
+        
+        allowance[msg.sender][_spender] = _value;
+        
+        //Emit Approve Event
+        emit Approve(msg.sender, _spender, _value);
+        
+        return true;
+        
     }
 }
 
