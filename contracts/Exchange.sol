@@ -16,6 +16,10 @@ contract Exchange{
 
     //Orders Counter
     uint256 public orderCount;
+
+    //Cancel Mapping
+    mapping(uint256 => bool) public orderCancelled;
+
     
     
     //Deposit Event
@@ -45,7 +49,17 @@ contract Exchange{
         uint256 amountGive,
         uint256 timestamp
         );
-    
+     //Cancel Event
+    event Cancel(
+        uint256 id,
+        address user,         
+        address tokenGet,
+        uint256 amountGet, 
+        address tokenGive, 
+        uint256 amountGive,
+        uint256 timestamp
+        );
+
     //Way to model the order
     //Orders Struct
     struct _Order {
@@ -139,7 +153,34 @@ contract Exchange{
                 _amountGive, 
                 block.timestamp
             );
+        }
 
+        //CANCEL ORDER
+        function cancelOrder(uint256 _id) public {
+            //Fetch Order
+            
+            //Below shows how to fetch from struct
+            _Order storage _order =orders[_id];
+
+            //Ensure function caller is owner of order
+            require(address(_order.user) == msg.sender);
+
+            //Order Must Exist
+            require(_order.id == _id);
+
+            //Cancel Order
+            orderCancelled[_id]= true;
+
+            // Emit Cancel Order event
+            emit Cancel(
+                _order.id,
+                msg.sender,
+                _order.tokenGet, 
+                _order.amountGet, 
+                _order.tokenGive, 
+               _order.amountGive, 
+                block.timestamp
+            );
         }
 
 }
