@@ -235,6 +235,16 @@ describe("Exchange", ()=> {
             transaction = await exchange.connect(user1).depositToken(token1.address, amount)
             result= await transaction.wait();
 
+            //Give Tokens to User 2
+            transaction = await token2.connect(deployer).transfer(user2.address, tokens(100));
+            result= await transaction.wait();
+            
+            //User 2 Deposits tokens RTBM & rDAI hence tokens(2)
+            transaction = await token2.connect(user2).approve(exchange.address, tokens(2))
+            result= await transaction.wait();
+            transaction = await exchange.connect(user2).depositToken(token2.address, tokens(2))
+            result= await transaction.wait();
+
             //Make an Order
             transaction = await exchange.connect(user1).makeOrder(token2.address , amount , token1.address, amount);
             result= await transaction.wait();
@@ -296,5 +306,91 @@ describe("Exchange", ()=> {
                 }) 
             })
         })
+
+        describe("Filling Orders" , async() => {
+            
+            describe("Success" , async() => {
+            
+                beforeEach( async ()=>{
+                    //User 1 has RTBM token 
+                    //User 2 has rDAI token 
+                    
+                    //User 2 fills orders
+                    transaction = await exchange.connect(user2).fillOrder("1");
+                    result = await transaction.wait();
+                })
+
+                it("Executes the trade and charge fees" , async ()=>{
+                    // User 2 is transfering to User 1
+
+                    //Token Give
+                    //Check Balance RTBM token of User 1
+                    expect(await exchange.balanceOf(token1.address, user1.address)).to.equal(tokens(0));
+                    //Check Balance RTBM token of User 2
+                    expect(await exchange.balanceOf(token1.address, user2.address)).to.equal(tokens(1));
+
+                    //Check Balance of RTBM token for fee Account
+                    expect(await exchange.balanceOf(token1.address, feeAccount.address)).to.equal(tokens(0));
+
+                    //Token Get
+                    //Check balance of rDAI token of User 1
+                    expect(await exchange.balanceOf(token2.address, user1.address)).to.equal(tokens(1));
+
+                    //Check balance of rDAI token of User 2
+                    expect(await exchange.balanceOf(token2.address, user2.address)).to.equal(tokens(0.9));
+
+                    //Check balance of rDAI token for fee Account
+                    expect(await exchange.balanceOf(token2.address, feeAccount.address)).to.equal(tokens(0.1));
+
+                })
+                it("Updates filled orders", async ()=> {
+                    expect(await exchange.orderFilled(1)).to.equals(true);
+                })
+
+                it("Emits a Trade event", async ()=> {
+                    const event = result.events[0]; 
+                    expect(event.event).to.equal("Trade")
+    
+                    const args = event.args;
+                    
+                    expect(args.id).to.equal(1);
+                    expect(args.user).to.equal(user2.address);//User 2 fills orders
+                    expect(args.tokenGet).to.equal(token2.address);
+                    expect(args.amountGet).to.equal(tokens(1));
+                    expect(args.tokenGive).to.equal(token1.address);
+                    expect(args.amountGive).to.equal(tokens(1));
+                    expect(args.creator).to.equal(user1.address);
+                    expect(args.timestamp).to.at.least(1);
+                })
+            })
+
+            describe("Failure" , async ()=> {
+                it("Rejects invalid Order Ids ", async ()=> {                   
+                    //Check Invalid Order
+                    const invalidOrderId = 99999;
+                    await expect(exchange.connect(user2).fillOrder(invalidOrderId)).to.be.reverted;
+                })
+                
+                it("Rejects already filled orders ", async ()=> {                   
+                    transaction = await exchange.connect(user2).fillOrder(1);
+                    await transaction.wait();
+                    
+                    //Try to fill order again
+                    await expect(exchange.connect(user2).fillOrder(1)).to.be.reverted;
+                }) 
+
+                it("Rejects cancelled orders ", async ()=> {                   
+                    transaction = await exchange.connect(user1).cancelOrder(1);
+                    await transaction.wait();
+                    
+                    //Try to fill order again
+                    await expect(exchange.connect(user2).fillOrder(1)).to.be.reverted;
+                }) 
+            })
+        })
     })
+
+    //----------------------------MAKE & CANCEL ORDER----------------------------//
+
+
 })

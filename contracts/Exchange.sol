@@ -20,7 +20,8 @@ contract Exchange{
     //Cancel Mapping
     mapping(uint256 => bool) public orderCancelled;
 
-    
+    //Trade Mapping
+    mapping(uint256 => bool) public orderFilled;
     
     //Deposit Event
     event Deposit(
@@ -37,7 +38,6 @@ contract Exchange{
         uint256 amount , 
         uint256 balance
         );
-
    
     //Order Event
     event Order(
@@ -49,6 +49,7 @@ contract Exchange{
         uint256 amountGive,
         uint256 timestamp
         );
+
      //Cancel Event
     event Cancel(
         uint256 id,
@@ -59,6 +60,19 @@ contract Exchange{
         uint256 amountGive,
         uint256 timestamp
         );
+
+     //Trade Event
+    event Trade(
+        uint256 id,
+        address user,         
+        address tokenGet,
+        uint256 amountGet, 
+        address tokenGive, 
+        uint256 amountGive,
+        address creator,
+        uint256 timestamp
+        );
+    
 
     //Way to model the order
     //Orders Struct
@@ -182,5 +196,90 @@ contract Exchange{
                 block.timestamp
             );
         }
+//----------------------------MAKE & CANCEL ORDER----------------------------//
+
+//----------------------------Execute / Fill ORDER----------------------------//
+    function fillOrder(uint256 _id) public {
+        
+        // 1. Must be valid orderID
+        require(_id > 0 && _id <=orderCount , "Order Doesn't Exist");
+
+        // 2. Order can't be filled
+        require(!orderFilled[_id]);
+        
+        // 3. Order can't be cancelled
+        require(!orderCancelled[_id]);
+        
+        //Fetch Order
+        //Below shows how to fetch from struct
+        _Order storage _order =orders[_id];
+        
+        //Swapping Tokens(Trading)
+        //Execute Trade
+        _trade(
+            _order.id,
+            _order.user,
+            _order.tokenGet,
+            _order.amountGet,
+            _order.tokenGive,
+            _order.amountGive
+        );
+
+        //Mark Order as Filled
+        orderFilled[_order.id]=true;
+    }
+
+    function _trade(
+        uint256 _orderId,
+        address _user,
+        address _tokenGet,
+        uint256 _amountGet,
+        address _tokenGive,
+        uint256 _amountGive
+    ) internal {
+
+            //Fee paid by order filler (msg.sender)
+            //Fee Deducted from _amountGet
+
+            //10 % charge
+            uint256 _feeAmount = (_amountGet * feePercent) / 100;
+
+            //Do Trade here
+            
+            //[msg.sender] is order filler User 2
+            //[_user] is order creater User1
+
+            //Get rDAI token from User 2 tokens[_tokenGet][msg.sender]
+            tokens[_tokenGet][msg.sender] = tokens[_tokenGet][msg.sender] - (_amountGet + _feeAmount);
+            
+            //Give rDAI token to User 1 tokens[_tokenGet][_user]
+            tokens[_tokenGet][_user] = tokens[_tokenGet][_user] + _amountGet;
+
+            //Charge 10% Fees
+            tokens[_tokenGet][feeAccount] = tokens[_tokenGet][feeAccount] + _feeAmount;
+
+            //Get RTBM token from User 1 tokens[_tokenGet][_user]
+            tokens[_tokenGive][_user] = tokens[_tokenGive][_user] - _amountGive;
+
+            //Give RTBM token to User 2 tokens[_tokenGet][msg.sender]
+            tokens[_tokenGive][msg.sender] = tokens[_tokenGive][msg.sender] + _amountGive;
+            
+            // Emit Trade event
+            emit Trade(
+                _orderId,
+                msg.sender,
+                _tokenGet, 
+                _amountGet, 
+                _tokenGive, 
+               _amountGive, 
+               _user,
+                block.timestamp
+            );
+        }
+
+
+//----------------------------Execute / Fill ORDER----------------------------//
+
+
 
 }
