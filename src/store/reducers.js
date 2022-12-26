@@ -16,20 +16,52 @@ export const provider = (state = {}, action) =>{
             ...state, // update existing state with ACCOUNT
             account : action.account       
         }
+        case 'ETHER_BALANCE_LOADED' :
+        return{
+            ...state, // update existing state with ACCOUNT
+            balance : action.balance       
+        }
         default:
             return state;
     }
 }
+const DEFAULT_TOKENS_STATE = {
+    loaded : false , 
+    contracts : [] , 
+    symbols :[] 
+};
 
-export const tokens = (state = {loaded : false , contract : null}, action) =>{
+export const tokens = (state = DEFAULT_TOKENS_STATE, action) =>{
     switch(action.type) {
-        case 'TOKEN_LOADED' :
+        case 'TOKEN_1_LOADED' :
         return{
             ...state, // update existing state with CONNECTION
             loaded : true,
-            contract : action.contract,
-            symbol : action.symbol            
-        }        
+            contracts : [... state.contracts , action.token],
+            symbols : [...state.symbols , action.symbols]            
+        }
+        
+        case 'TOKEN_2_LOADED' :
+        return{
+            ...state, // update existing state with CONNECTION
+            loaded : true,
+            contracts : [... state.contracts , action.token],
+            symbols : [...state.symbols , action.symbols]            
+        }
+
+        default:
+            return state;
+    }
+}
+
+export const exchange = (state = { loaded : false , contract :{} }, action) =>{
+    switch(action.type) {
+        case 'EXCHANGE_LOADED' :
+        return{
+            ...state, // update existing state with CONNECTION
+            loaded : true,
+            contracts : action.exchange,            
+        }
         default:
             return state;
     }
@@ -37,20 +69,4 @@ export const tokens = (state = {loaded : false , contract : null}, action) =>{
 
 
 
-
-
-
-
-
-
-function counterReducer(state = { value: 0 }, action) {
-    switch (action.type) {
-      case 'counter/incremented':
-        return { value: state.value + 1 }
-      case 'counter/decremented':
-        return { value: state.value - 1 }
-      default:
-        return state
-    }
-  }
 
