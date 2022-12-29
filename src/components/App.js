@@ -6,6 +6,7 @@ import EXCHANGE_ABI from "../abis/Exchange.json"
 import config from '../config.json';
 import { loadProvider,loadNetwork, loadAccount ,loadTokens, loadExchange } from "../store/interaction";
 
+import Navbar from "./Navbar";
 
 function App() {
   const dispatch = useDispatch();
@@ -17,8 +18,15 @@ function App() {
     // Fetch current network's chainId (e.g. hardhat: 31337, kovan: 42)
     const chainId = await loadNetwork(provider,dispatch);
 
-    // Fetch current account & balance from Metamask
-    const account = await loadAccount(provider, dispatch);
+    // Reload page when network changes
+    window.ethereum.on('chainChanged', () => {
+      window.location.reload()
+    })
+
+    // Fetch current account & balance from Metamask when changed
+    window.ethereum.on('accountsChanged', () => {
+      loadAccount(provider, dispatch)
+    })
         
     // Load Token Smart Contract
     const rtbm = config[chainId].rtbm;
@@ -38,6 +46,7 @@ function App() {
     <div>
 
       {/* Navbar */}
+      <Navbar />
 
       <main className='exchange grid'>
         <section className='exchange__section--left grid'>
