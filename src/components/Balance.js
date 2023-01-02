@@ -1,5 +1,6 @@
 import rtbm from '../assets/dapp.svg'
-import { useEffect , useState } from 'react';
+import rEth from '../assets/eth.svg'
+import { useEffect , useState , useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { loadBalances, transferTokens } from '../store/interaction';
@@ -7,7 +8,11 @@ import { loadBalances, transferTokens } from '../store/interaction';
 
 const Balance = () => {
     //Hooks used
-    const [token1TrasnferAmount ,setToken1TrasnferAmount] = useState(0);
+    const [token1TransferAmount ,setToken1TransferAmount] = useState(0);
+    const [token2TransferAmount ,setToken2TransferAmount] = useState(0);
+
+    //Change Submit button text based on selected Tab
+    const [isDeposit , setIsDeposit] = useState(true);
 
     const dispatch = useDispatch();
     
@@ -21,10 +26,33 @@ const Balance = () => {
     const symbols = useSelector(state => state.tokens.symbols);
     const tokenBalances = useSelector(state => state.tokens.balances);
     
+    //useRef used to handle Deposit and Withdrawal tab events
+    const depositRef = useRef(null);
+    const withdrawRef = useRef(null);
+
+    
+
+    // Switch between Deposit and Withdrawal
+    const tabHandler = (event) => {
+      if(event.target.className !== depositRef.current.className){
+        event.target.className = 'tab tab--active';
+        depositRef.current.className ='tab';
+        setIsDeposit (false);
+      }
+      else {
+        event.target.className = 'tab tab--active';
+        withdrawRef.current.className ='tab';
+        setIsDeposit (true)
+      }
+      
+    }
     //Update Balance Amount handler from textbox
     const amountHandler = (event ,token) =>{
         if(token.address === tokens[0].address){
-            setToken1TrasnferAmount(event.target.value);
+          setToken1TransferAmount(event.target.value);
+        }
+        else {
+          setToken2TransferAmount(event.target.value);
         }
     }
 
@@ -39,10 +67,15 @@ const Balance = () => {
         event.preventDefault(); // Prevents default refresh on enter
         if(token.address === tokens[0].address){
           //Transfer tokens to meta
-          transferTokens(provider, exchange, 'Deposit', token, token1TrasnferAmount, dispatch);
-          setToken1TrasnferAmount(0);
+          transferTokens(provider, exchange, 'Deposit', token, token1TransferAmount, dispatch);
+          // clear text box
+          setToken1TransferAmount(0);
         }
-        console.log({token1TrasnferAmount});
+        else {
+          transferTokens(provider, exchange, 'Deposit', token, token2TransferAmount, dispatch);
+          // clear text box
+          setToken2TransferAmount(0); 
+        }
     }
     
     useEffect(() => {
@@ -56,8 +89,8 @@ const Balance = () => {
         <div className='component__header flex-between'>
           <h2>Balance</h2>
           <div className='tabs'>
-            <button className='tab tab--active'>Deposit</button>
-            <button className='tab'>Withdraw</button>
+            <button onClick={tabHandler} ref = {depositRef} className='tab'>Deposit</button>
+            <button onClick={tabHandler} ref = {withdrawRef} className='tab'>Withdraw</button>
           </div>
         </div>
   
@@ -77,11 +110,15 @@ const Balance = () => {
                 type="text" 
                 id='token0' 
                 placeholder='0.0000' 
-                value={token1TrasnferAmount === 0 ? '' : token1TrasnferAmount} 
+                //Clear input Field
+                value={token1TransferAmount === 0 ? '' : token1TransferAmount} 
                 onChange={(event) => amountHandler(event, tokens[0])} />
   
             <button className='button' type='submit'>
-              <span>Deposit</span>
+              
+              {/* Set submit button text based on tab selected */}
+              { isDeposit ? (<span>Deposit</span>) : <span>Withdraw</span>}
+
             </button>
           </form>
         </div>
@@ -92,15 +129,25 @@ const Balance = () => {
   
         <div className='exchange__transfers--form'>
           <div className='flex-between'>
-  
+            <p><small>Token</small> <br/> <img src={rEth} alt="Token Logo" /> {symbols && symbols[1]}</p>     
+            <p><small>Wallet</small> <br />{tokenBalances && tokenBalances[1]}</p>  
+            <p><small>Exchange</small> <br />{exchangeBalances && exchangeBalances[1]}</p> 
           </div>
   
-          <form>
+          <form onSubmit={(event) => depositHandler(event , tokens[1])}>
             <label htmlFor="token1"></label>
-            <input type="text" id='token1' placeholder='0.0000'/>
+            <input type="text" 
+            id='token1' 
+            placeholder='0.0000'
+            //Clear input Field
+            value={token2TransferAmount === 0 ? '' : token2TransferAmount} 
+            onChange={(event) => amountHandler(event, tokens[1])}  
+            />
   
             <button className='button' type='submit'>
-              <span></span>
+               {/* Set submit button text based on tab selected */}
+               { isDeposit ? (<span>Deposit</span>) : <span>Withdraw</span>}
+
             </button>
           </form>
         </div>
