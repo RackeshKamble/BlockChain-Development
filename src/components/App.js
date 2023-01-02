@@ -9,6 +9,7 @@ import { loadProvider,loadNetwork, loadAccount ,loadTokens, loadExchange, subscr
 import Navbar from "./Navbar";
 import Markets from "./Markets";
 import Balance from "./Balance";
+import Order from "./Order";
 
 function App() {
   const dispatch = useDispatch();
@@ -64,6 +65,8 @@ function App() {
           <Balance />
 
           {/* Order */}
+
+          <Order />
 
         </section>
         <section className='exchange__section--right grid'>
