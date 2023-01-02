@@ -57,6 +57,11 @@ export const subscribeToEvents = (exchange, dispatch) => {
         //Step 4 Notify transfer was success
         dispatch({type : 'TRANSFER_SUCCESS' , event})
     })
+
+    exchange.on("Withdraw", (event) => {
+        //Step 4 Notify transfer was success
+        dispatch({type : 'TRANSFER_SUCCESS' , event})
+    })
 }
 //Load User Balances ( Wallet & Exchange Balance) needed for Deposit
 
@@ -85,10 +90,15 @@ export const loadBalances = async (exchange, tokens, account, dispatch) => {
     try {
       const signer = await provider.getSigner()
       const amountToTransfer = ethers.utils.parseUnits(amount.toString(), 18)
-  
-      transaction = await token.connect(signer).approve(exchange.address, amountToTransfer)
-      await transaction.wait()
-      transaction = await exchange.connect(signer).depositToken(token.address, amountToTransfer)
+
+      if(transferType === 'Deposit') {  
+        transaction = await token.connect(signer).approve(exchange.address, amountToTransfer)
+        await transaction.wait()
+        transaction = await exchange.connect(signer).depositToken(token.address, amountToTransfer)
+      }
+      else {
+        transaction = await exchange.connect(signer).withdrawToken(token.address, amountToTransfer)
+      }
   
       await transaction.wait()
   
