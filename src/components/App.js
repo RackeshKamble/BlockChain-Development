@@ -4,10 +4,11 @@ import { ethers } from "ethers";
 import TOKEN_ABI from "../abis/Token.json"
 import EXCHANGE_ABI from "../abis/Exchange.json"
 import config from '../config.json';
-import { loadProvider,loadNetwork, loadAccount ,loadTokens, loadExchange } from "../store/interaction";
+import { loadProvider,loadNetwork, loadAccount ,loadTokens, loadExchange, subscribeToEvents  } from "../store/interaction";
 
 import Navbar from "./Navbar";
 import Markets from "./Markets";
+import Balance from "./Balance";
 
 function App() {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ function App() {
   const loadBlockchainData = async () => {
       
     //Connect Ethers to Blockchain
-    const provider = await loadProvider(dispatch);
+    const provider = loadProvider(dispatch);
     // Fetch current network's chainId (e.g. hardhat: 31337, kovan: 42)
     const chainId = await loadNetwork(provider,dispatch);
 
@@ -32,11 +33,14 @@ function App() {
     // Load Token Smart Contract
     const rtbm = config[chainId].rtbm;
     const rEth = config[chainId].rEth;
-    const token = await loadTokens(provider, [rtbm.address , rEth.address] ,dispatch);
+    await loadTokens(provider, [rtbm.address , rEth.address] ,dispatch);
     
     // Load Exchange Smart Contract
     const exchangeconfig = config[chainId].exchange;
     const exchange = await loadExchange(provider,exchangeconfig.address, dispatch);
+    
+    //Listen to Events
+    subscribeToEvents(exchange,dispatch);
   }
 
   useEffect(() => {
@@ -56,6 +60,8 @@ function App() {
           <Markets />
 
           {/* Balance */}
+
+          <Balance />
 
           {/* Order */}
 
