@@ -3,23 +3,24 @@ import rEth from '../assets/eth.svg'
 import { useEffect , useState , useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { loadBalances, transferTokens } from '../store/interaction';
+import { loadBalances, transferTokens } from '../store/interactions';
 //import { exchange, tokens } from '../store/reducers';
 
 const Balance = () => {
+    //Change Submit button text based on selected Tab
+    const [isDeposit , setIsDeposit] = useState(true);
+    
     //Hooks used
     const [token1TransferAmount ,setToken1TransferAmount] = useState(0);
     const [token2TransferAmount ,setToken2TransferAmount] = useState(0);
-
-    //Change Submit button text based on selected Tab
-    const [isDeposit , setIsDeposit] = useState(true);
+    
 
     const dispatch = useDispatch();
     
-    const provider = useSelector(state => state.provider.connection);
-    
+    const provider = useSelector(state => state.provider.connection);    
     const account = useSelector(state => state.provider.account);
-    const exchange = useSelector(state => state.exchange.contracts);
+
+    const exchange = useSelector(state => state.exchange.contract);
     const exchangeBalances = useSelector(state => state.exchange.balances);
     const transferInProgress = useSelector(state => state.exchange.transferInProgress);
     const tokens = useSelector(state => state.tokens.contracts);

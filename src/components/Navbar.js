@@ -2,7 +2,7 @@ import logo from '../assets/logo.png';
 import eth from '../assets/eth.svg';
 import { useDispatch, useSelector } from "react-redux";
 import Blockies from "react-blockies";
-import { loadAccount } from "../store/interaction";
+import { loadAccount } from "../store/interactions";
 import config from '../config.json';
 
 const Navbar = () => {

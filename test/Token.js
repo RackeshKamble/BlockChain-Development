@@ -12,8 +12,8 @@ describe("Token", ()=> {
         
         //Fetch Token from Blockchain using ethers.js by deploying it first
         const Token = await ethers.getContractFactory("Token");
-        //token = await Token.deploy("Rakesh's Token","RTBM","18","1000000");
-        token = await Token.deploy("Rakesh's Token","RTBM","1000000");
+        token = await Token.deploy("Rakesh's Token","RTBM","18","1000000");
+        //token = await Token.deploy("Rakesh's Token","RTBM","1000000");
         
 
         //Fetch Accounts

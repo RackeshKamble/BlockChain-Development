@@ -4,13 +4,14 @@ import { ethers } from "ethers";
 import TOKEN_ABI from "../abis/Token.json"
 import EXCHANGE_ABI from "../abis/Exchange.json"
 import config from '../config.json';
-import { loadProvider,loadNetwork, loadAccount ,loadTokens, loadExchange, subscribeToEvents, loadAllOrders  } from "../store/interaction";
+import { loadProvider,loadNetwork, loadAccount ,loadTokens, loadExchange, subscribeToEvents, loadAllOrders  } from "../store/interactions";
 
 import Navbar from "./Navbar";
 import Markets from "./Markets";
 import Balance from "./Balance";
 import Order from "./Order";
 import OrderBook from "./OrderBook";
+import PriceChart from "./PriceChart";
 
 function App() {
   const dispatch = useDispatch();
@@ -76,7 +77,7 @@ function App() {
         <section className='exchange__section--right grid'>
 
           {/* PriceChart */}
-
+         
           {/* Transactions */}
 
           {/* Trades */}

@@ -1,6 +1,6 @@
 import config from '../config.json';
 import { useDispatch, useSelector } from "react-redux";
-import { loadTokens } from "../store/interaction";
+import { loadTokens } from "../store/interactions";
 
 const Markets = () => {
     // useselector to fetch accounts, balance , provider and chainId

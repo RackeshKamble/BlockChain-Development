@@ -1,4 +1,3 @@
-//Handle changes on ethers connections
 export const provider = (state = {}, action) => {
   switch (action.type) {
     case 'PROVIDER_LOADED':
@@ -32,7 +31,6 @@ const DEFAULT_TOKENS_STATE = {
   contracts: [],
   symbols: []
 }
-
 
 export const tokens = (state = DEFAULT_TOKENS_STATE, action) => {
   switch (action.type) {
@@ -81,18 +79,19 @@ const DEFAULT_EXCHANGE_STATE = {
   events: []
 }
 
-export const exchange = (state =  DEFAULT_EXCHANGE_STATE , action) =>{
-  let index , data;
-  
-    switch(action.type) {
-      case 'EXCHANGE_LOADED':
-      return{
-          ...state, 
-          loaded : true,
-          contract : action.exchange          
+export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
+  let index, data
+
+  switch (action.type) {
+    case 'EXCHANGE_LOADED':
+      return {
+        ...state,
+        loaded: true,
+        contract: action.exchange
       }
 
-          // ORDERS LOADED (CANCELLED, FILLED & ALL)
+    // ------------------------------------------------------------------------------
+    // ORDERS LOADED (CANCELLED, FILLED & ALL)
 
     case 'CANCELLED_ORDERS_LOADED':
       return {
@@ -121,58 +120,56 @@ export const exchange = (state =  DEFAULT_EXCHANGE_STATE , action) =>{
         }
       }
 
-      // BALANCE CASES
+    // ------------------------------------------------------------------------------
+    // BALANCE CASES
     case 'EXCHANGE_TOKEN_1_BALANCE_LOADED':
-    return {
-      ...state,
-      balances: [action.balance]
-    }
+      return {
+        ...state,
+        balances: [action.balance]
+      }
     case 'EXCHANGE_TOKEN_2_BALANCE_LOADED':
-    return {
-      ...state,
-      balances: [...state.balances, action.balance]
-    }
+      return {
+        ...state,
+        balances: [...state.balances, action.balance]
+      }
 
-
-    // TRANSFER CASES (DEPOSIT & WITHDRAWAL)
-    case 'TRANSFER _REQUEST':
-    return {
-      ...state,
-      transaction :{
-        transactionType: 'Transfer',
-        isPending: true,
-        isSuccessful: false
-      },
-      transferInProgress : true
-    }
-    
-    // Get confirmation from blockchain that Transfer was success
+    // ------------------------------------------------------------------------------
+    // TRANSFER CASES (DEPOSIT & WITHDRAWS)
+    case 'TRANSFER_REQUEST':
+      return {
+        ...state,
+        trasnsaction: {
+          transactionType: 'Transfer',
+          isPending: true,
+          isSuccessful: false
+        },
+        transferInProgress: true
+      }
     case 'TRANSFER_SUCCESS':
-    return {
-      ...state,
-      transaction :{
-        transactionType: 'Transfer',
-        isPending: false,
-        isSuccessful: true
-      },
-      transferInProgress : false,
-      events: [action.event , ... state.events]
-    }
-
-    // Handler FAILED Transfer and NOTIFY App
+      return {
+        ...state,
+        transaction: {
+          transactionType: 'Transfer',
+          isPending: false,
+          isSuccessful: true
+        },
+        transferInProgress: false,
+        events: [action.event, ...state.events]
+      }
     case 'TRANSFER_FAIL':
-    return {
-      ...state,
-      transaction :{
-        transactionType: 'Transfer',
-        isPending: false,
-        isSuccessful: false,
-        isError: true
-      },
-      transferInProgress : false
-    }
-    
-  // ------------------------------------------------------------------------------
+      return {
+        ...state,
+        transaction: {
+          transactionType: 'Transfer',
+          isPending: false,
+          isSuccessful: false,
+          isError: true
+
+        },
+        transferInProgress: false
+      }
+
+    // ------------------------------------------------------------------------------
     // MAKING ORDERS CASES
 
     case 'NEW_ORDER_REQUEST':
