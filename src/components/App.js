@@ -77,7 +77,7 @@ function App() {
         <section className='exchange__section--right grid'>
 
           {/* PriceChart */}
-         
+         <PriceChart/>
           {/* Transactions */}
 
           {/* Trades */}
