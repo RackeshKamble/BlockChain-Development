@@ -4,12 +4,13 @@ import { ethers } from "ethers";
 import TOKEN_ABI from "../abis/Token.json"
 import EXCHANGE_ABI from "../abis/Exchange.json"
 import config from '../config.json';
-import { loadProvider,loadNetwork, loadAccount ,loadTokens, loadExchange, subscribeToEvents  } from "../store/interaction";
+import { loadProvider,loadNetwork, loadAccount ,loadTokens, loadExchange, subscribeToEvents, loadAllOrders  } from "../store/interaction";
 
 import Navbar from "./Navbar";
 import Markets from "./Markets";
 import Balance from "./Balance";
 import Order from "./Order";
+import OrderBook from "./OrderBook";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,7 +41,10 @@ function App() {
     const exchangeconfig = config[chainId].exchange;
     const exchange = await loadExchange(provider,exchangeconfig.address, dispatch);
     
-    //Listen to Events
+    // Fetch ALL ORDERS ( CANCELLED, FILLED, OPENED)
+    loadAllOrders(provider, exchange, dispatch);
+    
+    // Listen to Events
     subscribeToEvents(exchange,dispatch);
   }
 
@@ -78,6 +82,7 @@ function App() {
           {/* Trades */}
 
           {/* OrderBook */}
+          <OrderBook />
 
         </section>
       </main>
