@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { ethers } from "ethers";
-import TOKEN_ABI from "../abis/Token.json"
-import EXCHANGE_ABI from "../abis/Exchange.json"
+
 import config from '../config.json';
 import { loadProvider,loadNetwork, loadAccount ,loadTokens, loadExchange, subscribeToEvents, loadAllOrders  } from "../store/interactions";
 
@@ -14,6 +12,7 @@ import OrderBook from "./OrderBook";
 import PriceChart from "./PriceChart";
 import Trades from "./Trades";
 import Transactions from "./Transactions";
+import Alert from "./Alert";
 
 function App() {
   const dispatch = useDispatch();
@@ -94,7 +93,7 @@ function App() {
       </main>
 
       {/* Alert */}
-
+      <Alert/>
     </div>
   );
 }
