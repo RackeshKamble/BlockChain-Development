@@ -26,12 +26,12 @@ function App() {
 
     // Reload page when network changes
     window.ethereum.on('chainChanged', () => {
-      window.location.reload()
+      window.location.reload();
     })
 
     // Fetch current account & balance from Metamask when changed
     window.ethereum.on('accountsChanged', () => {
-      loadAccount(provider, dispatch)
+      loadAccount(provider, dispatch);
     })
         
     // Load Token Smart Contract
@@ -51,7 +51,7 @@ function App() {
   }
 
   useEffect(() => {
-    loadBlockchainData()
+    loadBlockchainData();
   })
 
   return (

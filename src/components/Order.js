@@ -5,38 +5,38 @@ import { makeBuyOrder , makeSellOrder } from "../store/interactions";
 
 const Order = () => {
 
-  const [isBuy, setIsBuy] = useState(true)
-  const [amount, setAmount] = useState(0)
-  const [price, setPrice] = useState(0)
+  const [isBuy, setIsBuy] = useState(true) ;
+  const [amount, setAmount] = useState(0) ;
+  const [price, setPrice] = useState(0) ;
 
-  const provider = useSelector(state => state.provider.connection)
-  const tokens = useSelector(state => state.tokens.contracts)
-  const exchange = useSelector(state => state.exchange.contract)
+  const provider = useSelector(state => state.provider.connection) ;
+  const tokens = useSelector(state => state.tokens.contracts) ;
+  const exchange = useSelector(state => state.exchange.contract) ;
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch() ;
 
-  const buyRef = useRef(null)
-  const sellRef = useRef(null)
+  const buyRef = useRef(null) ;
+  const sellRef = useRef(null) ;
 
     // Switch between Buy and Sell
     const tabHandler = (e) => {
       if(e.target.className !== buyRef.current.className) {
-        e.target.className = 'tab tab--active'
-        buyRef.current.className = 'tab'
-        setIsBuy(false)
+        e.target.className = 'tab tab--active' ;
+        buyRef.current.className = 'tab' ;
+        setIsBuy(false) ;
       } else {
-        e.target.className = 'tab tab--active'
-        sellRef.current.className = 'tab'
-        setIsBuy(true)
+        e.target.className = 'tab tab--active' ;
+        sellRef.current.className = 'tab' ;
+        setIsBuy(true) ;
       }
     }
     
     const buyHandler = (e) => {
         // Prevents default refresh on enter
-        e.preventDefault()
-        makeBuyOrder(provider, exchange, tokens, { amount, price }, dispatch)
-        setAmount(0)
-        setPrice(0)
+        e.preventDefault() ;
+        makeBuyOrder(provider, exchange, tokens, { amount, price }, dispatch) ;
+        setAmount(0) ;
+        setPrice(0) ;
     }
 
     const sellHandler = (e) => {

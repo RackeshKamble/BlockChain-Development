@@ -5,12 +5,12 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 /* Import Reducers */
 import { provider, tokens, exchange } from './reducers'
 
-const reducer = combineReducers({ provider, tokens, exchange})
+const reducer = combineReducers({ provider, tokens, exchange}) ;
 
-const initialState = {}
+const initialState = {} ;
 
-const middleware = [thunk]
+const middleware = [thunk] ;
 
-const store = createStore(reducer, initialState, composeWithDevTools(applyMiddleware(...middleware)))
+const store = createStore(reducer, initialState, composeWithDevTools(applyMiddleware(...middleware))) ;
 
-export default store
+export default store ;

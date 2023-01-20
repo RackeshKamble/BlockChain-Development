@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect'
+import { createSelector } from 'reselect' ;
 //import { tokens } from "./reducers"; // We are using Loadash for this
 import { get, groupBy, maxBy, minBy, reject } from 'lodash';
 //moment = to Format time which is in HEX -> Human Readable
@@ -13,20 +13,20 @@ const account = state => get(state , 'provider.account');
 // Needed for success / failure messagbox
 const events = state => get(state, 'exchange.events');
 
-const allOrders = state => get(state, 'exchange.allOrders.data', [])
-const cancelledOrders = state => get(state, 'exchange.cancelledOrders.data', [])
-const filledOrders = state => get(state, 'exchange.filledOrders.data', [])
+const allOrders = state => get(state, 'exchange.allOrders.data', []) ;
+const cancelledOrders = state => get(state, 'exchange.cancelledOrders.data', []) ;
+const filledOrders = state => get(state, 'exchange.filledOrders.data', []) ;
 
 
 const openOrders = state => {
-    const all = allOrders(state)
-    const filled = filledOrders(state)
-    const cancelled = cancelledOrders(state)
+    const all = allOrders(state) ;
+    const filled = filledOrders(state) ;
+    const cancelled = cancelledOrders(state) ;
   
     const openOrders = reject(all, (order) => {
-      const orderFilled = filled.some((o) => o.id.toString() === order.id.toString())
-      const orderCancelled = cancelled.some((o) => o.id.toString() === order.id.toString())
-      return(orderFilled || orderCancelled)
+      const orderFilled = filled.some((o) => o.id.toString() === order.id.toString()) ;
+      const orderCancelled = cancelled.some((o) => o.id.toString() === order.id.toString()) ;
+      return(orderFilled || orderCancelled) ;
     })
   
     return openOrders

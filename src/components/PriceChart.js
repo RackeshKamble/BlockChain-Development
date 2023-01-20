@@ -11,9 +11,9 @@ import { options, defaultSeries } from './PriceChart.config';
 import { priceChartSelector } from '../store/selectors';
 
 const PriceChart = () => {
-  const account = useSelector(state => state.provider.account)
-  const symbols = useSelector(state => state.tokens.symbols)
-  const priceChart = useSelector(priceChartSelector)
+  const account = useSelector(state => state.provider.account) ;
+  const symbols = useSelector(state => state.tokens.symbols) ;
+  const priceChart = useSelector(priceChartSelector) ;
 
   return (
     <div className="component exchange__chart">

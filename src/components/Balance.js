@@ -1,5 +1,5 @@
-import rtbm from '../assets/dapp.svg'
-import rEth from '../assets/eth.svg'
+import rtbm from '../assets/dapp.svg' ;
+import rEth from '../assets/eth.svg' ;
 import { useEffect , useState , useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -97,7 +97,7 @@ const Balance = () => {
     
     useEffect(() => {
         if(exchange && tokens[0] && tokens[1] && account) {
-          loadBalances(exchange, tokens, account, dispatch)
+          loadBalances(exchange, tokens, account, dispatch) ;
         }
       }, [exchange, tokens, account, transferInProgress , dispatch])
 

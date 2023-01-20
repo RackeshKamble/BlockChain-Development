@@ -4,13 +4,13 @@ import { loadTokens } from "../store/interactions";
 
 const Markets = () => {
     // useselector to fetch accounts, balance , provider and chainId
-    const provider = useSelector(state => state.provider.connection)
-    const chainId = useSelector(state => state.provider.chainId)
+    const provider = useSelector(state => state.provider.connection) ;
+    const chainId = useSelector(state => state.provider.chainId) ;
     
     const dispatch = useDispatch();
 
     const marketHandler = async (event) => {
-        loadTokens(provider, (event.target.value).split(',') , dispatch)
+        loadTokens(provider, (event.target.value).split(',') , dispatch) ;
     }
 
     return(

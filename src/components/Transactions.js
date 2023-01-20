@@ -4,7 +4,7 @@ import sort from '../assets/sort.svg';
 
 import Banner from './Banner';
 import { myOpenOrdersSelector , myFilledOrdersSelector } from '../store/selectors';
-import { cancelOrder } from '../store/interactions'
+import { cancelOrder } from '../store/interactions' ;
 
 const Transactions = () => {
 
@@ -36,7 +36,7 @@ const Transactions = () => {
     }
 
     const cancelHandler = (order) => {
-      cancelOrder(provider, exchange, order, dispatch)
+      cancelOrder(provider, exchange, order, dispatch) ;
     }
 
     return (

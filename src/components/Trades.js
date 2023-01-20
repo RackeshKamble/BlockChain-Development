@@ -1,9 +1,9 @@
-import { useSelector } from 'react-redux'
-import { filledOrdersSelector } from '../store/selectors'
+import { useSelector } from 'react-redux' ;
+import { filledOrdersSelector } from '../store/selectors' ;
 
-import sort from '../assets/sort.svg'
+import sort from '../assets/sort.svg' ;
 //import Order from './Order';
-import Banner from './Banner'
+import Banner from './Banner' ;
 const Trades = () => {
     
     const filledOrders = useSelector(filledOrdersSelector);
