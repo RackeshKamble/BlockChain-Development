@@ -26,6 +26,10 @@ module.exports = {
     goerli :{
       url : 'https://goerli.infura.io/v3/421199f0845348f696444a4b8df93dbd' , 
       accounts : privateKeys.split(',')
+    },
+    mumbai :{
+      url : 'https://polygon-mumbai.g.alchemy.com/v2/2JV1eFq0PPg5204di-DKxKYvrW1uBSVL' , 
+      accounts : privateKeys.split(',')
     }
   },
   browser: true,
