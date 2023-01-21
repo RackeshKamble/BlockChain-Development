@@ -1,6 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 require("dotenv").config();
-
+const privateKeys = process.env.PRIVATE_KEYS || "" ;
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -22,7 +22,11 @@ task("balance", "Prints an account's balance").setAction(async () => {});
 module.exports = {
   solidity: "0.8.9",
   networks :{
-    localhost:{}
+    localhost:{},
+    goerli :{
+      url : 'https://goerli.infura.io/v3/421199f0845348f696444a4b8df93dbd' , 
+      accounts : privateKeys.split(',')
+    }
   },
   browser: true,
 };
