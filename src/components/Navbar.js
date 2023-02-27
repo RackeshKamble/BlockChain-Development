@@ -31,7 +31,7 @@ const Navbar = () => {
       <div className='exchange__header grid'>
         <div className='exchange__header--brand flex'>
             <img src={logo} className="logo" alt="RDex Logo"></img>
-            <h1>R-Dex Token Exchange</h1>
+            <h1>R-Dex Exchange</h1>
         </div>
   
         <div className='exchange__header--networks flex'>
@@ -65,7 +65,7 @@ const Navbar = () => {
                 <Blockies 
                 seed={account} size={10} scale={3} color="#2187D0" bgColor="#F1F2F9" spotColor="#767F92" className="identicon" 
                 />     
-            </a> ) : ( <button className="button" onClick={connectHandler}>Connect</button> ) }            
+            </a> ) : ( <button className="button" onClick={connectHandler}>Connect Wallet</button> ) }            
             
         </div>
       </div>

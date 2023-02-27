@@ -90,10 +90,14 @@ function App() {
           <OrderBook />
 
         </section>
+        
       </main>
 
       {/* Alert */}
       <Alert/>
+      {/* <div className="footer__copyright">
+        <small>Created by RAKESH KAMBLE as a part of Blockchain Bootcamp.</small>
+      </div> */}
     </div>
   );
 }
